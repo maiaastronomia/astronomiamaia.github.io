@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astrologia Maia Completa | Energias Cósmicas</title>
+    <title>Astrologia Maia - Tzolk'in | Descubra seu Nawal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* FONTS & COLORS */
@@ -79,7 +79,7 @@
             margin: 0 auto;
         }
 
-        /* CARDS */
+        /* CARD */
         .card {
             background: linear-gradient(145deg, rgba(10, 26, 47, 0.9), rgba(70, 25, 100, 0.7));
             border-radius: 20px;
@@ -398,53 +398,23 @@
 </head>
 <body>
     <header>
-        <h1>Energias Maias</h1>
-        <p class="subtitle">Descubra seu destino através da sabedoria ancestral</p>
+        <h1>Tzolk'in Sagrado</h1>
+        <p class="subtitle">Descubra seu Nawal através da sabedoria maia</p>
     </header>
 
     <div class="container">
-        <!-- CARD 1: TZOLK'IN -->
+        <!-- CARD: TZOLK'IN -->
         <div class="card">
             <div class="card-icon pulse">
                 <i class="fas fa-calendar-star"></i>
             </div>
-            <h2>Tzolk'in Sagrado</h2>
+            <h2>Seu Nawal</h2>
             <p>
                 O calendário sagrado de 260 dias que revela seu Nawal (espírito guardião) e energia vital. 
                 Cada dia combina um dos 20 glifos com um número de 1 a 13, criando uma assinatura energética única.
             </p>
-            <button class="btn" onclick="openDateInputModal('tzolkin')">
+            <button class="btn" onclick="openDateInputModal()">
                 <i class="fas fa-calculator"></i> Calcular meu Nawal
-            </button>
-        </div>
-
-        <!-- CARD 2: ENERGIA CÓSMICA -->
-        <div class="card">
-            <div class="card-icon pulse">
-                <i class="fas fa-atom"></i>
-            </div>
-            <h2>Energia Cósmica</h2>
-            <p>
-                Análise completa da sua energia pessoal baseada na data de nascimento, 
-                incluindo alinhamento com os ciclos galácticos e influência das direções sagradas.
-            </p>
-            <button class="btn" onclick="openDateInputModal('cosmic')">
-                <i class="fas fa-chart-line"></i> Analisar minha Energia
-            </button>
-        </div>
-
-        <!-- CARD 3: PORTAL GALÁCTICO -->
-        <div class="card">
-            <div class="card-icon pulse">
-                <i class="fas fa-star"></i>
-            </div>
-            <h2>Portal Galáctico</h2>
-            <p>
-                Descubra seu portal galáctico pessoal e como ele influencia sua jornada espiritual, 
-                conexão com dimensões superiores e missão de vida.
-            </p>
-            <button class="btn" onclick="openDateInputModal('galactic')">
-                <i class="fas fa-door-open"></i> Descobrir meu Portal
             </button>
         </div>
     </div>
@@ -453,7 +423,7 @@
     <div class="modal" id="resultModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2 class="modal-title" id="modalTitle">Resultado</h2>
+            <h2 class="modal-title" id="modalTitle">Seu Nawal</h2>
             <div class="modal-text" id="modalText"></div>
             <div class="energy-details" id="energyDetails"></div>
         </div>
@@ -463,7 +433,7 @@
     <div class="date-input-modal" id="dateInputModal">
         <div class="date-input-content">
             <span class="close-modal" onclick="closeDateInputModal()">&times;</span>
-            <h2 class="date-input-title" id="dateInputTitle">Digite sua data de nascimento</h2>
+            <h2 class="date-input-title">Digite sua data de nascimento</h2>
             <form class="date-input-form" id="dateInputForm">
                 <div class="date-input-group">
                     <label for="birthDay">Dia:</label>
@@ -485,6 +455,10 @@
         </div>
     </div>
 
+    <footer>
+        <p class="footer-text">Sabedoria Maia Ancestral &copy; 2023</p>
+    </footer>
+
     <script>
         // VARIÁVEIS GLOBAIS
         const modal = document.getElementById('resultModal');
@@ -494,9 +468,6 @@
         
         const dateInputModal = document.getElementById('dateInputModal');
         const dateInputForm = document.getElementById('dateInputForm');
-        const dateInputTitle = document.getElementById('dateInputTitle');
-        
-        let currentCalculationType = '';
         
         // NAWALES (GLIFOS DO TZOLK'IN)
         const nawales = [
@@ -550,38 +521,8 @@
             { name: "Sul", color: "Amarelo", element: "Água", meaning: "Fertilidade, abundância" }
         ];
 
-        // ENERGIA CÓSMICA
-        const cosmicEnergies = [
-            { name: "Kinich Ahau", power: "Sol", meaning: "Iluminação, consciência elevada", color: "Dourado" },
-            { name: "Ix Chel", power: "Lua", meaning: "Intuição, ciclos femininos", color: "Prata" },
-            { name: "Kukulkan", power: "Serpente", meaning: "Sabedoria, transformação", color: "Verde" },
-            { name: "Hunab Ku", power: "Centro", meaning: "Unidade cósmica, conexão divina", color: "Branco" }
-        ];
-
-        // PORTAL GALÁCTICO
-        const galacticPortals = [
-            { name: "Portal Solar", dimension: "3D", meaning: "Manifestação material", color: "Amarelo" },
-            { name: "Portal Lunar", dimension: "4D", meaning: "Expansão emocional", color: "Azul" },
-            { name: "Portal Estelar", dimension: "5D", meaning: "Ativação espiritual", color: "Violeta" },
-            { name: "Portal Central", dimension: "6D+", meaning: "Conexão com a fonte", color: "Branco" }
-        ];
-
         // ABRIR MODAL DE ENTRADA DE DATA
-        function openDateInputModal(type) {
-            currentCalculationType = type;
-            
-            switch(type) {
-                case 'tzolkin':
-                    dateInputTitle.textContent = "Calcular Tzolk'in - Digite sua data de nascimento";
-                    break;
-                case 'cosmic':
-                    dateInputTitle.textContent = "Análise de Energia Cósmica - Digite sua data de nascimento";
-                    break;
-                case 'galactic':
-                    dateInputTitle.textContent = "Descobrir Portal Galáctico - Digite sua data de nascimento";
-                    break;
-            }
-            
+        function openDateInputModal() {
             dateInputModal.style.display = "flex";
             document.body.style.overflow = "hidden";
         }
@@ -608,19 +549,7 @@
             }
             
             closeDateInputModal();
-            
-            // Executar cálculo baseado no tipo
-            switch(currentCalculationType) {
-                case 'tzolkin':
-                    calculateTzolkin(day, month, year);
-                    break;
-                case 'cosmic':
-                    calculateCosmicEnergy(day, month, year);
-                    break;
-                case 'galactic':
-                    calculateGalacticPortal(day, month, year);
-                    break;
-            }
+            calculateTzolkin(day, month, year);
         });
 
         // VALIDAR DATA
@@ -652,6 +581,7 @@
             const number = (diffDays % 13) + 1;
             
             const nawal = nawales[nawalIndex];
+            const direction = sacredDirections.find(d => d.name === nawal.direction);
             
             // Exibir resultado no modal
             modalTitle.textContent = `Seu Nawal: ${number} ${nawal.name} (${nawal.glyph})`;
@@ -665,7 +595,8 @@
             energyDetails.innerHTML = `
                 <h3>Detalhes Energéticos</h3>
                 <p><strong>Elemento:</strong> ${nawal.element}</p>
-                <p><strong>Direção Sagrada:</strong> ${nawal.direction} (${nawal.color})</p>
+                <p><strong>Direção Sagrada:</strong> ${nawal.direction} (${direction.color}) - ${direction.meaning}</p>
+                <p><strong>Cor:</strong> ${nawal.color}</p>
                 <p><strong>Dias favoráveis:</strong> Quando o número ${number} aparece no calendário</p>
                 <p><strong>Pedras recomendadas:</strong> ${getRecommendedStones(nawal.element)}</p>
             `;
@@ -673,78 +604,7 @@
             openModal();
         }
 
-        // CALCULAR ENERGIA CÓSMICA
-        function calculateCosmicEnergy(day, month, year) {
-            const birthDate = new Date(year, month - 1, day);
-            const today = new Date();
-            const ageInDays = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
-            
-            // Cálculo da energia cósmica baseada em ciclos
-            const cosmicCycle = ageInDays % 52; // Ciclo sagrado de 52 anos
-            const energyIndex = Math.floor(cosmicCycle / 13) % 4;
-            const energyNumber = (cosmicCycle % 13) + 1;
-            
-            const energy = cosmicEnergies[energyIndex];
-            const direction = sacredDirections[energyIndex];
-            
-            modalTitle.textContent = `Sua Energia Cósmica: ${energyNumber} ${energy.name}`;
-            
-            modalText.innerHTML = `
-                <p>Sua energia cósmica atual está alinhada com <strong>${energy.name}</strong>, 
-                o poder do <strong>${energy.power}</strong>.</p>
-                <p><strong>Significado:</strong> ${energy.meaning}</p>
-                <p><strong>Número de poder:</strong> ${energyNumber} (${getNumberMeaning(energyNumber)})</p>
-            `;
-            
-            energyDetails.innerHTML = `
-                <h3>Orientações Cósmicas</h3>
-                <p><strong>Cor de ativação:</strong> ${energy.color}</p>
-                <p><strong>Direção sagrada:</strong> ${direction.name} (${direction.color})</p>
-                <p><strong>Elemento:</strong> ${direction.element}</p>
-                <p><strong>Meditação recomendada:</strong> ${getCosmicMeditation(energyIndex)}</p>
-                <p><strong>Alinhamento atual:</strong> ${getCosmicAlignment(cosmicCycle)}</p>
-            `;
-            
-            openModal();
-        }
-
-        // CALCULAR PORTAL GALÁCTICO
-        function calculateGalacticPortal(day, month, year) {
-            const birthDate = new Date(year, month - 1, day);
-            const dayOfYear = getDayOfYear(birthDate);
-            const portalIndex = dayOfYear % 4;
-            
-            const portal = galacticPortals[portalIndex];
-            const direction = sacredDirections[portalIndex];
-            
-            modalTitle.textContent = `Seu Portal Galáctico: ${portal.name}`;
-            
-            modalText.innerHTML = `
-                <p>Seu portal galáctico pessoal é o <strong>${portal.name}</strong>, 
-                conectando você à dimensão <strong>${portal.dimension}</strong>.</p>
-                <p><strong>Significado:</strong> ${portal.meaning}</p>
-            `;
-            
-            energyDetails.innerHTML = `
-                <h3>Características do Portal</h3>
-                <p><strong>Cor do portal:</strong> ${portal.color}</p>
-                <p><strong>Direção associada:</strong> ${direction.name} (${direction.color})</p>
-                <p><strong>Ativação:</strong> ${getPortalActivation(dayOfYear)}</p>
-                <p><strong>Missão:</strong> ${getGalacticMission(portalIndex)}</p>
-                <p><strong>Aliados espirituais:</strong> ${getSpiritualAllies(portalIndex)}</p>
-            `;
-            
-            openModal();
-        }
-
         // FUNÇÕES AUXILIARES
-        function getDayOfYear(date) {
-            const start = new Date(date.getFullYear(), 0, 0);
-            const diff = date - start;
-            const oneDay = 1000 * 60 * 60 * 24;
-            return Math.floor(diff / oneDay);
-        }
-
         function getRecommendedStones(element) {
             const stones = {
                 "Água": "Jade, Água-marinha, Quartzo azul",
@@ -753,75 +613,6 @@
                 "Fogo": "Pirita, Granada, Quartzo rutilado"
             };
             return stones[element] || "Quartzo rosa para equilíbrio";
-        }
-
-        function getNumberMeaning(number) {
-            const meanings = [
-                "Unidade, início",
-                "Dualidade, parceria",
-                "Criação, expressão",
-                "Estabilidade, fundação",
-                "Mudança, liberdade",
-                "Harmonia, equilíbrio",
-                "Sabedoria, introspecção",
-                "Poder, manifestação",
-                "Completude, serviço",
-                "Renovação, novos ciclos",
-                "Iluminação, intuição",
-                "Cura, transformação",
-                "Transcendência, união cósmica"
-            ];
-            return meanings[number - 1] || "Energia divina";
-        }
-
-        function getCosmicMeditation(index) {
-            const meditations = [
-                "Visualize um sol dourado brilhando em seu coração",
-                "Conecte-se com a luz prateada da lua em seu terceiro olho",
-                "Imagine uma serpente de luz verde ascendendo sua coluna",
-                "Sinta-se como um ponto de luz branca no centro do universo"
-            ];
-            return meditations[index];
-        }
-
-        function getCosmicAlignment(cycle) {
-            const alignments = [
-                "Alinhamento com o Sol Central",
-                "Sincronização com a Grade Galáctica",
-                "Harmonia com os Raios Cósmicos",
-                "Conexão com o Coração da Terra"
-            ];
-            return alignments[cycle % 4];
-        }
-
-        function getPortalActivation(day) {
-            const activations = [
-                "Ativado durante o equinócio de primavera",
-                "Ativado durante o solstício de verão",
-                "Ativado durante o equinócio de outono",
-                "Ativado durante o solstício de inverno"
-            ];
-            return activations[day % 4];
-        }
-
-        function getGalacticMission(index) {
-            const missions = [
-                "Ancorar luz na matéria",
-                "Equilibrar emoções e intuição",
-                "Ativar códigos de luz",
-                "Servir como ponte dimensional"
-            ];
-            return missions[index];
-        }
-
-        function getSpiritualAllies(index) {
-            const allies = [
-                "Arcanjo Miguel e os Mestres Ascensos",
-                "Maria Madalena e as Sacerdotisas Lunares",
-                "Thoth e os Guardiões do Conhecimento",
-                "Metatron e os Serafins"
-            ];
-            return allies[index];
         }
 
         function openModal() {
