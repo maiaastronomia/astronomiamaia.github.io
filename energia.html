@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrologia Maia Completa | Energias Cósmicas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* FONTS & COLORS */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #FFD700;
+            --deep-blue: #0A1A2F;
+            --turquoise: #48D1CC;
+            --purple: #6A5ACD;
+            --blood-red: #8B0000;
+            --jade: #00A86B;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1511&auto=format&fit=crop') center/cover no-repeat fixed;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 26, 47, 0.85);
+            z-index: -1;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, rgba(10, 26, 47, 0.9), rgba(106, 90, 205, 0.7));
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--gold);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 3.5rem;
+            margin: 0;
+            background: linear-gradient(90deg, var(--gold-light), var(--turquoise));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            margin-top: 0.5rem;
+            color: var(--turquoise);
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* CARDS */
+        .card {
+            background: linear-gradient(145deg, rgba(10, 26, 47, 0.9), rgba(70, 25, 100, 0.7));
+            border-radius: 20px;
+            width: 350px;
+            padding: 2rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(8px);
+            border: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            border-color: var(--turquoise);
+        }
+
+        .card h2 {
+            color: var(--gold-light);
+            font-family: 'Cinzel Decorative', cursive;
+            text-align: center;
+            border-bottom: 2px solid var(--turquoise);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--turquoise);
+            text-shadow: 0 0 15px rgba(72, 209, 204, 0.7);
+        }
+
+        /* BOTÕES */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            background: linear-gradient(135deg, var(--gold), var(--jade));
+            color: var(--deep-blue);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--jade), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, var(--deep-blue), #1a0a2f);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 600px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            position: relative;
+            animation: modalFadeIn 0.5s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--gold);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            color: var(--gold-light);
+            font-family: 'Cinzel Decorative', cursive;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .modal-text {
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .energy-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--turquoise);
+        }
+
+        .energy-details h3 {
+            color: var(--turquoise);
+            margin-top: 0;
+        }
+
+        /* DATE INPUT MODAL */
+        .date-input-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .date-input-content {
+            background: linear-gradient(145deg, var(--deep-blue), #1a0a2f);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            position: relative;
+            animation: modalFadeIn 0.5s ease;
+        }
+
+        .date-input-title {
+            color: var(--gold-light);
+            font-family: 'Cinzel Decorative', cursive;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .date-input-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .date-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .date-input-group label {
+            margin-bottom: 0.5rem;
+            color: var(--turquoise);
+        }
+
+        .date-input-group input {
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--gold);
+            background: rgba(10, 26, 47, 0.7);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .date-input-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .date-input-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-input-btn.submit {
+            background: linear-gradient(135deg, var(--gold), var(--jade));
+            color: var(--deep-blue);
+        }
+
+        .date-input-btn.cancel {
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+
+        .date-input-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, rgba(10, 26, 47, 0.9), rgba(106, 90, 205, 0.7));
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-top: 3px solid var(--gold);
+        }
+
+        .footer-text {
+            margin: 0;
+            color: var(--turquoise);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .card {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .modal-content, .date-input-content {
+                padding: 1.5rem;
+            }
+            
+            .date-input-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* ANIMAÇÕES */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Energias Maias</h1>
+        <p class="subtitle">Descubra seu destino através da sabedoria ancestral</p>
+    </header>
+
+    <div class="container">
+        <!-- CARD 1: TZOLK'IN -->
+        <div class="card">
+            <div class="card-icon pulse">
+                <i class="fas fa-calendar-star"></i>
+            </div>
+            <h2>Tzolk'in Sagrado</h2>
+            <p>
+                O calendário sagrado de 260 dias que revela seu Nawal (espírito guardião) e energia vital. 
+                Cada dia combina um dos 20 glifos com um número de 1 a 13, criando uma assinatura energética única.
+            </p>
+            <button class="btn" onclick="openDateInputModal('tzolkin')">
+                <i class="fas fa-calculator"></i> Calcular meu Nawal
+            </button>
+        </div>
+
+        <!-- CARD 2: ENERGIA CÓSMICA -->
+        <div class="card">
+            <div class="card-icon pulse">
+                <i class="fas fa-atom"></i>
+            </div>
+            <h2>Energia Cósmica</h2>
+            <p>
+                Análise completa da sua energia pessoal baseada na data de nascimento, 
+                incluindo alinhamento com os ciclos galácticos e influência das direções sagradas.
+            </p>
+            <button class="btn" onclick="openDateInputModal('cosmic')">
+                <i class="fas fa-chart-line"></i> Analisar minha Energia
+            </button>
+        </div>
+
+        <!-- CARD 3: PORTAL GALÁCTICO -->
+        <div class="card">
+            <div class="card-icon pulse">
+                <i class="fas fa-star"></i>
+            </div>
+            <h2>Portal Galáctico</h2>
+            <p>
+                Descubra seu portal galáctico pessoal e como ele influencia sua jornada espiritual, 
+                conexão com dimensões superiores e missão de vida.
+            </p>
+            <button class="btn" onclick="openDateInputModal('galactic')">
+                <i class="fas fa-door-open"></i> Descobrir meu Portal
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE RESULTADOS -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title" id="modalTitle">Resultado</h2>
+            <div class="modal-text" id="modalText"></div>
+            <div class="energy-details" id="energyDetails"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ENTRADA DE DATA -->
+    <div class="date-input-modal" id="dateInputModal">
+        <div class="date-input-content">
+            <span class="close-modal" onclick="closeDateInputModal()">&times;</span>
+            <h2 class="date-input-title" id="dateInputTitle">Digite sua data de nascimento</h2>
+            <form class="date-input-form" id="dateInputForm">
+                <div class="date-input-group">
+                    <label for="birthDay">Dia:</label>
+                    <input type="number" id="birthDay" min="1" max="31" placeholder="DD" required>
+                </div>
+                <div class="date-input-group">
+                    <label for="birthMonth">Mês:</label>
+                    <input type="number" id="birthMonth" min="1" max="12" placeholder="MM" required>
+                </div>
+                <div class="date-input-group">
+                    <label for="birthYear">Ano:</label>
+                    <input type="number" id="birthYear" min="1900" max="2100" placeholder="AAAA" required>
+                </div>
+                <div class="date-input-buttons">
+                    <button type="button" class="date-input-btn cancel" onclick="closeDateInputModal()">Cancelar</button>
+                    <button type="submit" class="date-input-btn submit">Calcular</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-text">© 2023 Sabedoria Maia | Desvendando os mistérios do cosmos</p>
+    </footer>
+
+    <script>
+        // VARIÁVEIS GLOBAIS
+        const modal = document.getElementById('resultModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalText = document.getElementById('modalText');
+        const energyDetails = document.getElementById('energyDetails');
+        
+        const dateInputModal = document.getElementById('dateInputModal');
+        const dateInputForm = document.getElementById('dateInputForm');
+        const dateInputTitle = document.getElementById('dateInputTitle');
+        
+        let currentCalculationType = '';
+        
+        // NAWALES (GLIFOS DO TZOLK'IN)
+        const nawales = [
+            { name: "Imix'", glyph: "Crocodilo", element: "Água", direction: "Leste", 
+              meaning: "Origem, força vital, proteção", color: "Vermelho" },
+            { name: "Ik'", glyph: "Vento", element: "Ar", direction: "Norte", 
+              meaning: "Comunicação, liberdade, respiração", color: "Branco" },
+            { name: "Ak'b'al", glyph: "Noite", element: "Terra", direction: "Oeste", 
+              meaning: "Mistério, intuição, sonhos", color: "Preto" },
+            { name: "K'an", glyph: "Semente", element: "Terra", direction: "Sul", 
+              meaning: "Fertilidade, potencial, abundância", color: "Amarelo" },
+            { name: "Chikchan", glyph: "Serpente", element: "Fogo", direction: "Leste", 
+              meaning: "Energia vital, sabedoria, transformação", color: "Vermelho" },
+            { name: "Kimi", glyph: "Morte", element: "Água", direction: "Oeste", 
+              meaning: "Transformação, renovação, ciclos", color: "Preto" },
+            { name: "Manik'", glyph: "Cervo", element: "Terra", direction: "Sul", 
+              meaning: "Cura, conexão com a natureza", color: "Amarelo" },
+            { name: "Lamat", glyph: "Coelho", element: "Ar", direction: "Norte", 
+              meaning: "Amor, fertilidade, arte", color: "Branco" },
+            { name: "Muluk", glyph: "Água", element: "Água", direction: "Leste", 
+              meaning: "Emoções, purificação, fluxo", color: "Vermelho" },
+            { name: "Ok", glyph: "Cão", element: "Terra", direction: "Oeste", 
+              meaning: "Lealdade, proteção, serviço", color: "Preto" },
+            { name: "Chuwen", glyph: "Macaco", element: "Ar", direction: "Norte", 
+              meaning: "Criatividade, brincadeira, magia", color: "Branco" },
+            { name: "Eb'", glyph: "Caminhante", element: "Terra", direction: "Sul", 
+              meaning: "Caminho, destino, jornada", color: "Amarelo" },
+            { name: "B'en", glyph: "Canavial", element: "Fogo", direction: "Leste", 
+              meaning: "Autoridade, liderança, poder", color: "Vermelho" },
+            { name: "Ix", glyph: "Jaguar", element: "Terra", direction: "Oeste", 
+              meaning: "Poder xamânico, visão noturna", color: "Preto" },
+            { name: "Men", glyph: "Águia", element: "Ar", direction: "Norte", 
+              meaning: "Visão ampla, liberdade, espírito", color: "Branco" },
+            { name: "K'ib'", glyph: "Coruja", element: "Água", direction: "Leste", 
+              meaning: "Sabedoria, mistério, magia", color: "Vermelho" },
+            { name: "Kab'an", glyph: "Terra", element: "Terra", direction: "Oeste", 
+              meaning: "Estabilidade, paciência, movimento", color: "Preto" },
+            { name: "Etz'nab'", glyph: "Espelho", element: "Fogo", direction: "Sul", 
+              meaning: "Verdade, reflexão, justiça", color: "Amarelo" },
+            { name: "Kawak", glyph: "Tempestade", element: "Água", direction: "Leste", 
+              meaning: "Renovação, caos criativo", color: "Vermelho" },
+            { name: "Ajaw", glyph: "Sol", element: "Fogo", direction: "Norte", 
+              meaning: "Iluminação, liderança, poder", color: "Branco" }
+        ];
+
+        // DIREÇÕES SAGRADAS
+        const sacredDirections = [
+            { name: "Leste", color: "Vermelho", element: "Fogo", meaning: "Nascimento, renovação" },
+            { name: "Norte", color: "Branco", element: "Ar", meaning: "Sabedoria, pureza" },
+            { name: "Oeste", color: "Preto", element: "Terra", meaning: "Transformação, mistério" },
+            { name: "Sul", color: "Amarelo", element: "Água", meaning: "Fertilidade, abundância" }
+        ];
+
+        // ENERGIA CÓSMICA
+        const cosmicEnergies = [
+            { name: "Kinich Ahau", power: "Sol", meaning: "Iluminação, consciência elevada", color: "Dourado" },
+            { name: "Ix Chel", power: "Lua", meaning: "Intuição, ciclos femininos", color: "Prata" },
+            { name: "Kukulkan", power: "Serpente", meaning: "Sabedoria, transformação", color: "Verde" },
+            { name: "Hunab Ku", power: "Centro", meaning: "Unidade cósmica, conexão divina", color: "Branco" }
+        ];
+
+        // PORTAL GALÁCTICO
+        const galacticPortals = [
+            { name: "Portal Solar", dimension: "3D", meaning: "Manifestação material", color: "Amarelo" },
+            { name: "Portal Lunar", dimension: "4D", meaning: "Expansão emocional", color: "Azul" },
+            { name: "Portal Estelar", dimension: "5D", meaning: "Ativação espiritual", color: "Violeta" },
+            { name: "Portal Central", dimension: "6D+", meaning: "Conexão com a fonte", color: "Branco" }
+        ];
+
+        // ABRIR MODAL DE ENTRADA DE DATA
+        function openDateInputModal(type) {
+            currentCalculationType = type;
+            
+            switch(type) {
+                case 'tzolkin':
+                    dateInputTitle.textContent = "Calcular Tzolk'in - Digite sua data de nascimento";
+                    break;
+                case 'cosmic':
+                    dateInputTitle.textContent = "Análise de Energia Cósmica - Digite sua data de nascimento";
+                    break;
+                case 'galactic':
+                    dateInputTitle.textContent = "Descobrir Portal Galáctico - Digite sua data de nascimento";
+                    break;
+            }
+            
+            dateInputModal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        // FECHAR MODAL DE ENTRADA DE DATA
+        function closeDateInputModal() {
+            dateInputModal.style.display = "none";
+            document.body.style.overflow = "auto";
+            dateInputForm.reset();
+        }
+
+        // MANIPULAR ENVIO DO FORMULÁRIO
+        dateInputForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const day = parseInt(document.getElementById('birthDay').value);
+            const month = parseInt(document.getElementById('birthMonth').value);
+            const year = parseInt(document.getElementById('birthYear').value);
+            
+            // Validar data
+            if (!isValidDate(day, month, year)) {
+                alert("Por favor, insira uma data válida!");
+                return;
+            }
+            
+            closeDateInputModal();
+            
+            // Executar cálculo baseado no tipo
+            switch(currentCalculationType) {
+                case 'tzolkin':
+                    calculateTzolkin(day, month, year);
+                    break;
+                case 'cosmic':
+                    calculateCosmicEnergy(day, month, year);
+                    break;
+                case 'galactic':
+                    calculateGalacticPortal(day, month, year);
+                    break;
+            }
+        });
+
+        // VALIDAR DATA
+        function isValidDate(day, month, year) {
+            if (day < 1 || day > 31) return false;
+            if (month < 1 || month > 12) return false;
+            if (year < 1900 || year > new Date().getFullYear()) return false;
+            
+            // Verificar meses com 30 dias
+            if ([4, 6, 9, 11].includes(month) && day > 30) return false;
+            
+            // Verificar fevereiro
+            if (month === 2) {
+                const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+                if (day > (isLeap ? 29 : 28)) return false;
+            }
+            
+            return true;
+        }
+
+        // CALCULAR TZOLK'IN
+        function calculateTzolkin(day, month, year) {
+            // Cálculo simplificado do Tzolk'in (para precisão histórica, use algoritmos mais complexos)
+            const baseDate = new Date(1970, 0, 1); // Data base conhecida: 1 Imix'
+            const targetDate = new Date(year, month - 1, day);
+            const diffDays = Math.floor((targetDate - baseDate) / (1000 * 60 * 60 * 24));
+            
+            const nawalIndex = diffDays % 20;
+            const number = (diffDays % 13) + 1;
+            
+            const nawal = nawales[nawalIndex];
+            
+            // Exibir resultado no modal
+            modalTitle.textContent = `Seu Nawal: ${number} ${nawal.name} (${nawal.glyph})`;
+            
+            modalText.innerHTML = `
+                <p>Você nasceu sob a energia de <strong>${number} ${nawal.name}</strong>, 
+                o glifo do <strong>${nawal.glyph}</strong>.</p>
+                <p><strong>Significado:</strong> ${nawal.meaning}</p>
+            `;
+            
+            energyDetails.innerHTML = `
+                <h3>Detalhes Energéticos</h3>
+                <p><strong>Elemento:</strong> ${nawal.element}</p>
+                <p><strong>Direção Sagrada:</strong> ${nawal.direction} (${nawal.color})</p>
+                <p><strong>Dias favoráveis:</strong> Quando o número ${number} aparece no calendário</p>
+                <p><strong>Pedras recomendadas:</strong> ${getRecommendedStones(nawal.element)}</p>
+            `;
+            
+            openModal();
+        }
+
+        // CALCULAR ENERGIA CÓSMICA
+        function calculateCosmicEnergy(day, month, year) {
+            const birthDate = new Date(year, month - 1, day);
+            const today = new Date();
+            const ageInDays = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
+            
+            // Cálculo da energia cósmica baseada em ciclos
+            const cosmicCycle = ageInDays % 52; // Ciclo sagrado de 52 anos
+            const energyIndex = Math.floor(cosmicCycle / 13) % 4;
+            const energyNumber = (cosmicCycle % 13) + 1;
+            
+            const energy = cosmicEnergies[energyIndex];
+            const direction = sacredDirections[energyIndex];
+            
+            modalTitle.textContent = `Sua Energia Cósmica: ${energyNumber} ${energy.name}`;
+            
+            modalText.innerHTML = `
+                <p>Sua energia cósmica atual está alinhada com <strong>${energy.name}</strong>, 
+                o poder do <strong>${energy.power}</strong>.</p>
+                <p><strong>Significado:</strong> ${energy.meaning}</p>
+                <p><strong>Número de poder:</strong> ${energyNumber} (${getNumberMeaning(energyNumber)})</p>
+            `;
+            
+            energyDetails.innerHTML = `
+                <h3>Orientações Cósmicas</h3>
+                <p><strong>Cor de ativação:</strong> ${energy.color}</p>
+                <p><strong>Direção sagrada:</strong> ${direction.name} (${direction.color})</p>
+                <p><strong>Elemento:</strong> ${direction.element}</p>
+                <p><strong>Meditação recomendada:</strong> ${getCosmicMeditation(energyIndex)}</p>
+                <p><strong>Alinhamento atual:</strong> ${getCosmicAlignment(cosmicCycle)}</p>
+            `;
+            
+            openModal();
+        }
+
+        // CALCULAR PORTAL GALÁCTICO
+        function calculateGalacticPortal(day, month, year) {
+            const birthDate = new Date(year, month - 1, day);
+            const dayOfYear = getDayOfYear(birthDate);
+            const portalIndex = dayOfYear % 4;
+            
+            const portal = galacticPortals[portalIndex];
+            const direction = sacredDirections[portalIndex];
+            
+            modalTitle.textContent = `Seu Portal Galáctico: ${portal.name}`;
+            
+            modalText.innerHTML = `
+                <p>Seu portal galáctico pessoal é o <strong>${portal.name}</strong>, 
+                conectando você à dimensão <strong>${portal.dimension}</strong>.</p>
+                <p><strong>Significado:</strong> ${portal.meaning}</p>
+            `;
+            
+            energyDetails.innerHTML = `
+                <h3>Características do Portal</h3>
+                <p><strong>Cor do portal:</strong> ${portal.color}</p>
+                <p><strong>Direção associada:</strong> ${direction.name} (${direction.color})</p>
+                <p><strong>Ativação:</strong> ${getPortalActivation(dayOfYear)}</p>
+                <p><strong>Missão:</strong> ${getGalacticMission(portalIndex)}</p>
+                <p><strong>Aliados espirituais:</strong> ${getSpiritualAllies(portalIndex)}</p>
+            `;
+            
+            openModal();
+        }
+
+        // FUNÇÕES AUXILIARES
+        function getDayOfYear(date) {
+            const start = new Date(date.getFullYear(), 0, 0);
+            const diff = date - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            return Math.floor(diff / oneDay);
+        }
+
+        function getRecommendedStones(element) {
+            const stones = {
+                "Água": "Jade, Água-marinha, Quartzo azul",
+                "Terra": "Obsidiana, Turmalina negra, Ônix",
+                "Ar": "Selenita, Quartzo transparente, Amazonita",
+                "Fogo": "Pirita, Granada, Quartzo rutilado"
+            };
+            return stones[element] || "Quartzo rosa para equilíbrio";
+        }
+
+        function getNumberMeaning(number) {
+            const meanings = [
+                "Unidade, início",
+                "Dualidade, parceria",
+                "Criação, expressão",
+                "Estabilidade, fundação",
+                "Mudança, liberdade",
+                "Harmonia, equilíbrio",
+                "Sabedoria, introspecção",
+                "Poder, manifestação",
+                "Completude, serviço",
+                "Renovação, novos ciclos",
+                "Iluminação, intuição",
+                "Cura, transformação",
+                "Transcendência, união cósmica"
+            ];
+            return meanings[number - 1] || "Energia divina";
+        }
+
+        function getCosmicMeditation(index) {
+            const meditations = [
+                "Visualize um sol dourado brilhando em seu coração",
+                "Conecte-se com a luz prateada da lua em seu terceiro olho",
+                "Imagine uma serpente de luz verde ascendendo sua coluna",
+                "Sinta-se como um ponto de luz branca no centro do universo"
+            ];
+            return meditations[index];
+        }
+
+        function getCosmicAlignment(cycle) {
+            const alignments = [
+                "Alinhamento com o Sol Central",
+                "Sincronização com a Grade Galáctica",
+                "Harmonia com os Raios Cósmicos",
+                "Conexão com o Coração da Terra"
+            ];
+            return alignments[cycle % 4];
+        }
+
+        function getPortalActivation(day) {
+            const activations = [
+                "Ativado durante o equinócio de primavera",
+                "Ativado durante o solstício de verão",
+                "Ativado durante o equinócio de outono",
+                "Ativado durante o solstício de inverno"
+            ];
+            return activations[day % 4];
+        }
+
+        function getGalacticMission(index) {
+            const missions = [
+                "Ancorar luz na matéria",
+                "Equilibrar emoções e intuição",
+                "Ativar códigos de luz",
+                "Servir como ponte dimensional"
+            ];
+            return missions[index];
+        }
+
+        function getSpiritualAllies(index) {
+            const allies = [
+                "Arcanjo Miguel e os Mestres Ascensos",
+                "Maria Madalena e as Sacerdotisas Lunares",
+                "Thoth e os Guardiões do Conhecimento",
+                "Metatron e os Serafins"
+            ];
+            return allies[index];
+        }
+
+        function openModal() {
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        // Fechar modais ao clicar fora
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+            if (event.target == dateInputModal) {
+                closeDateInputModal();
+            }
+        }
+    </script>
+</body>
+</html>
