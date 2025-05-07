@@ -1,11 +1,204 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Astronomia Maia - Apresentação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .presentation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        .presentation-wrapper {
+            width: 100%;
+            height: 100%;
+            max-width: 1200px;
+            max-height: 800px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(210, 180, 60, 0.6);
+        }
+        
+        .presentation-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .control-button {
+            background-color: rgba(210, 180, 60, 0.9);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .control-button:hover {
+            background-color: rgba(255, 215, 0, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .control-button:active {
+            transform: translateY(1px);
+        }
+        
+        @media (orientation: portrait) {
+            .presentation-wrapper {
+                max-height: 60vh;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .presentation-wrapper {
+                border-radius: 0;
+                max-height: 100%;
+            }
+            
+            .controls {
+                bottom: 10px;
+                right: 10px;
+                flex-direction: column;
+            }
+            
+            .control-button {
+                padding: 10px 15px;
+                font-size: 14px;
+                min-width: 80px;
+            }
+        }
+        
+        /* Ajustes específicos para iOS */
+        @supports (-webkit-touch-callout: none) {
+            .presentation-container {
+                padding: 0;
+            }
+            
+            .presentation-wrapper {
+                max-height: 100%;
+                border-radius: 0;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="presentation-container">
+        <div class="presentation-wrapper">
+            <iframe 
+                class="presentation-iframe"
+                src="https://www.canva.com/design/DAGmf7C4rvU/4PoKn1dfOIwOGfdV5B2_Vg/view?embed" 
+                allowfullscreen="allowfullscreen" 
+                allow="fullscreen"
+                loading="eager"
+                title="Apresentação de Astronomia Maia">
+            </iframe>
+        </div>
+    </div>
     
+    <div class="controls">
+        <button class="control-button" onclick="window.history.back()">Voltar</button>
+        <button class="control-button" onclick="toggleFullScreen()">Tela Cheia</button>
+    </div>
+    
+    <script>
+        // Função para tela cheia verdadeira
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        // Ajusta o iframe quando a orientação muda
+        function adjustForOrientation() {
+            const wrapper = document.querySelector('.presentation-wrapper');
+            if (window.innerHeight > window.innerWidth) {
+                // Portrait
+                wrapper.style.maxHeight = '60vh';
+                wrapper.style.maxWidth = '95vw';
+            } else {
+                // Landscape
+                wrapper.style.maxHeight = '80vh';
+                wrapper.style.maxWidth = '95vw';
+            }
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajuste inicial
+            adjustForOrientation();
+            
+            // Detecta mudanças de orientação
+            window.addEventListener('orientationchange', adjustForOrientation);
+            window.addEventListener('resize', adjustForOrientation);
+            
+            // Força o carregamento rápido em mobile
+            if ('connection' in navigator && navigator.connection.saveData) {
+                const iframe = document.querySelector('.presentation-iframe');
+                iframe.setAttribute('loading', 'auto');
+            }
+        });
+        
+        // Tecla ESC para sair
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    window.history.back();
+                }
+            }
+        });
+        
+        // Melhor tratamento para iOS
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            document.querySelector('.presentation-wrapper').style.borderRadius = '0';
+        }
+    </script>
 </body>
 </html>
