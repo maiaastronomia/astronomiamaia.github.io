@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Astronomia Maia - Modo Dupla</title>
+    <style>
+        :root {
+            --primary: #6A5ACD;
+            --secondary: #4169E1;
+            --accent: #FFD700;
+            --text: #E6E6FA;
+            --dark: #0F0526;
+            --light: #1E1E3C;
+            --correct: #4CAF50;
+            --incorrect: #F44336;
+            --player1: #FF6B6B;
+            --player2: #4ECDC4;
+            --space-gradient: linear-gradient(135deg, #0F0526 0%, #1E1E3C 50%, #0F0526 100%);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        body {
+            background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 5, 38, 0.85);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: var(--space-gradient);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 
+                        0 0 20px rgba(102, 51, 204, 0.3),
+                        0 0 40px rgba(65, 105, 225, 0.2);
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, transparent 20%, rgba(255, 215, 0, 0.1) 20%, transparent 21%);
+            background-size: 30px 30px;
+            opacity: 0.5;
+            animation: stars 100s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes stars {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--accent);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+        
+        h1::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 10px auto;
+        }
+        
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .quiz-header p {
+            font-size: 1.1rem;
+            color: var(--text);
+            text-shadow: 0 0 5px rgba(230, 230, 250, 0.3);
+        }
+        
+        .player-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .player-card {
+            flex: 1;
+            background: rgba(65, 105, 225, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            position: relative;
+            text-align: center;
+        }
+        
+        .player-card.active {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            border-color: var(--accent);
+        }
+        
+        .player-card.player1 {
+            border-top: 4px solid var(--player1);
+        }
+        
+        .player-card.player2 {
+            border-top: 4px solid var(--player2);
+        }
+        
+        .player-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .player1 .player-name {
+            color: var(--player1);
+        }
+        
+        .player2 .player-name {
+            color: var(--player2);
+        }
+        
+        .player-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .player-stats div {
+            font-size: 0.9rem;
+        }
+        
+        .player-stats span {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-in;
+            position: relative;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--accent);
+            text-align: center;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            padding: 15px;
+            background: rgba(30, 30, 60, 0.5);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            background: rgba(65, 105, 225, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            transition: 0.5s;
+        }
+        
+        .option:hover {
+            background: rgba(65, 105, 225, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+        
+        .option:hover::before {
+            left: 100%;
+        }
+        
+        .option.correct {
+            background-color: var(--correct);
+            color: white;
+            border-color: var(--correct);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        .option.incorrect {
+            background-color: var(--incorrect);
+            color: white;
+            border-color: var(--incorrect);
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:hover::before {
+            opacity: 1;
+        }
+        
+        button:disabled {
+            background: #333;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            color: #666;
+        }
+        
+        .hint-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(65, 105, 225, 0.1);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            color: var(--text);
+            position: relative;
+        }
+        
+        .hint-container::before {
+            content: '✨';
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .hint-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .hint-container strong {
+            color: var(--accent);
+        }
+        
+        .result-container {
+            text-align: center;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .result-container.show {
+            display: block;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .result-title {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .player-result {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .player-score {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(30, 30, 60, 0.7);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .player1-score {
+            border-top: 5px solid var(--player1);
+        }
+        
+        .player2-score {
+            border-top: 5px solid var(--player2);
+        }
+        
+        .player-score-name {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .player1-score .player-score-name {
+            color: var(--player1);
+        }
+        
+        .player2-score .player-score-name {
+            color: var(--player2);
+        }
+        
+        .player-score-points {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+        
+        .tiebreaker {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            border: 1px dashed var(--accent);
+        }
+        
+        .tiebreaker-title {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .winner-message {
+            font-size: 1.8rem;
+            margin: 30px 0;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-weight: bold;
+        }
+        
+        .restart-btn {
+            margin-top: 30px;
+            background: linear-gradient(135deg, var(--accent) 0%, #FFA500 100%);
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .restart-btn:hover {
+            background: linear-gradient(135deg, #FFA500 0%, var(--accent) 100%);
+        }
+        
+        .maya-pattern {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.2;
+            z-index: -1;
+        }
+        
+        .pattern-1 {
+            top: 20px;
+            left: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="%23FFD700"/></svg>');
+        }
+        
+        .pattern-2 {
+            bottom: 20px;
+            right: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%23FFD700" stroke-width="5" fill="none"/></svg>');
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 15px auto;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .player-info {
+                flex-direction: column;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+                padding: 10px;
+            }
+            
+            .option {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                min-width: 100%;
+            }
+            
+            .player-score {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .quiz-header p {
+                font-size: 0.9rem;
+            }
+            
+            .question {
+                font-size: 1rem;
+            }
+            
+            .option {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+            
+            button {
+                font-size: 0.8rem;
+            }
+            
+            .result-title {
+                font-size: 1.5rem;
+            }
+            
+            .player-score-points {
+                font-size: 2rem;
+            }
+            
+            .winner-message {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="maya-pattern pattern-1"></div>
+    <div class="maya-pattern pattern-2"></div>
+    
+    <div class="container">
+        <h1>Quiz de Astronomia Maia - Modo Dupla</h1>
+        
+        <div class="quiz-header">
+            <p>Cada jogador responde 10 perguntas. No final, em caso de empate, haverá uma pergunta de desempate!</p>
+        </div>
+        
+        <div class="player-info">
+            <div class="player-card player1" id="player1-card">
+                <div class="player-name">Jogador 1</div>
+                <div class="player-stats">
+                    <div>
+                        Pergunta: <span id="player1-question">1/10</span>
+                    </div>
+                    <div>
+                        Acertos: <span id="player1-score">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="player-card player2" id="player2-card">
+                <div class="player-name">Jogador 2</div>
+                <div class="player-stats">
+                    <div>
+                        Pergunta: <span id="player2-question">0/10</span>
+                    </div>
+                    <div>
+                        Acertos: <span id="player2-score">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="quiz-container">
+            <div class="question-container">
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+                <div class="hint-container" id="hint-container">
+                    <strong>Dica:</strong> <span id="hint-text"></span>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="hint-btn">Dica</button>
+                <button id="next-btn" disabled>Próxima</button>
+            </div>
+        </div>
+        
+        <div class="result-container" id="result-container">
+            <h2 class="result-title">Quiz Concluído!</h2>
+            
+            <div class="player-result">
+                <div class="player-score player1-score">
+                    <div class="player-score-name">Jogador 1</div>
+                    <div class="player-score-points" id="final-player1-score">0</div>
+                </div>
+                
+                <div class="player-score player2-score">
+                    <div class="player-score-name">Jogador 2</div>
+                    <div class="player-score-points" id="final-player2-score">0</div>
+                </div>
+            </div>
+            
+            <div id="tiebreaker-container" class="tiebreaker" style="display: none;">
+                <div class="tiebreaker-title">Pergunta de Desempate!</div>
+                <div class="question" id="tiebreaker-question"></div>
+                <div class="options" id="tiebreaker-options"></div>
+            </div>
+            
+            <div id="winner-message" class="winner-message"></div>
+            
+            <button class="restart-btn" id="restart-btn">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Qual era o principal objeto de estudo astronômico dos maias?",
+                options: [
+                    "O Sol",
+                    "Vênus",
+                    "A Lua",
+                    "Marte"
+                ],
+                correctAnswer: 1,
+                hint: "Este planeta era associado ao deus Kukulkán e seu ciclo era extremamente importante para os maias."
+            },
+            {
+                question: "Qual calendário maia era usado para rastrear eventos astronômicos de longo prazo?",
+                options: [
+                    "Tzolk'in",
+                    "Haab'",
+                    "Calendário de Contagem Longa",
+                    "Calendário Lunar"
+                ],
+                correctAnswer: 2,
+                hint: "Este calendário media períodos muito longos e era usado para registrar eventos históricos e astronômicos importantes."
+            },
+            {
+                question: "Qual estrutura maia foi projetada para observar o equinócio?",
+                options: [
+                    "Templo das Inscrições em Palenque",
+                    "El Caracol em Chichén Itzá",
+                    "Pirâmide de Kukulkán em Chichén Itzá",
+                    "Templo do Grande Jaguar em Tikal"
+                ],
+                correctAnswer: 2,
+                hint: "Durante os equinócios, um efeito de luz e sombra cria a ilusão de uma serpente descendo esta pirâmide."
+            },
+            {
+                question: "Os maias eram capazes de prever com precisão qual evento astronômico?",
+                options: [
+                    "Eclipses lunares",
+                    "Passagem de cometas",
+                    "Tempestades solares",
+                    "Chuva de meteoros"
+                ],
+                correctAnswer: 0,
+                hint: "Eles mantinham registros detalhados desses eventos e desenvolveram tabelas para prever sua ocorrência."
+            },
+            {
+                question: "Qual era a duração do ciclo de Vênus segundo os maias?",
+                options: [
+                    "224 dias",
+                    "365 dias",
+                    "584 dias",
+                    "780 dias"
+                ],
+                correctAnswer: 2,
+                hint: "Os maias calcularam este ciclo com impressionante precisão, considerando tanto seu movimento aparente como estrela da manhã quanto da tarde."
+            },
+            {
+                question: "Qual desses códices maias contém informações astronômicas importantes?",
+                options: [
+                    "Códice de Madrid",
+                    "Códice de Paris",
+                    "Códice de Dresden",
+                    "Códice de Borgia"
+                ],
+                correctAnswer: 2,
+                hint: "Este códice contém tabelas detalhadas sobre os movimentos da Lua e de Vênus."
+            },
+            {
+                question: "Como os maias chamavam a Via Láctea?",
+                options: [
+                    "Wakah Chan",
+                    "Hunab Ku",
+                    "Itzamná",
+                    "Xibalba"
+                ],
+                correctAnswer: 0,
+                hint: "O nome significa 'Árvore do Mundo' ou 'Céu Erguido' na cosmologia maia."
+            },
+            {
+                question: "Qual era o propósito principal da astronomia maia?",
+                options: [
+                    "Navegação",
+                    "Agricultura",
+                    "Religião e ritual",
+                    "Exploração espacial"
+                ],
+                correctAnswer: 2,
+                hint: "A astronomia estava intimamente ligada à sua visão de mundo religiosa e à organização de seus rituais."
+            },
+            {
+                question: "Qual era a precisão do ano solar calculado pelos maias?",
+                options: [
+                    "365 dias exatos",
+                    "365,25 dias",
+                    "365,2420 dias",
+                    "365,2422 dias"
+                ],
+                correctAnswer: 3,
+                hint: "O valor moderno é 365,2422 dias. Os maias chegaram muito perto deste número com seus cálculos."
+            },
+            {
+                question: "Qual dessas constelações era reconhecida pelos maias?",
+                options: [
+                    "A Tartaruga",
+                    "O Escorpião",
+                    "O Jaguar",
+                    "O Guerreiro"
+                ],
+                correctAnswer: 2,
+                hint: "Assim como outras culturas, os maias agrupavam estrelas em constelações com formas de animais e objetos."
+            },
+            {
+                question: "Qual deus maia estava associado ao Sol?",
+                options: [
+                    "Kukulkán",
+                    "Itzamná",
+                    "Chaac",
+                    "Ixchel"
+                ],
+                correctAnswer: 1,
+                hint: "Este deus era considerado o senhor dos céus e do dia, frequentemente associado ao Sol e à criação."
+            },
+            {
+                question: "Qual era o nome do observatório astronômico em Chichén Itzá?",
+                options: [
+                    "El Castillo",
+                    "El Caracol",
+                    "Templo dos Guerreiros",
+                    "Templo das Mil Colunas"
+                ],
+                correctAnswer: 1,
+                hint: "Seu nome significa 'o caracol' em espanhol, devido à escada em espiral em seu interior."
+            },
+            {
+                question: "Como os maias chamavam Vênus quando aparecia como estrela da manhã?",
+                options: [
+                    "Noh Ek",
+                    "Chak Ek",
+                    "K'in Ek",
+                    "Zac Ek"
+                ],
+                correctAnswer: 1,
+                hint: "Este nome significa 'Grande Estrela' ou 'Estrela Vermelha' na língua maia."
+            },
+            {
+                question: "Qual era o ciclo lunar mais importante para os maias?",
+                options: [
+                    "29 dias",
+                    "30 dias",
+                    "59 dias",
+                    "177 dias"
+                ],
+                correctAnswer: 2,
+                hint: "Os maias identificaram que dois meses lunares somavam aproximadamente 59 dias."
+            },
+            {
+                question: "Qual era a principal função dos astrônomos maias na sociedade?",
+                options: [
+                    "Prever estações para agricultura",
+                    "Determinar datas para rituais",
+                    "Mapear rotas para comércio",
+                    "Prever o futuro dos governantes"
+                ],
+                correctAnswer: 1,
+                hint: "Os astrônomos eram sacerdotes que usavam seus conhecimentos para marcar datas importantes para cerimônias religiosas."
+            },
+            {
+                question: "Qual desses números era crucial nos cálculos astronômicos maias?",
+                options: [
+                    "13",
+                    "20",
+                    "52",
+                    "260"
+                ],
+                correctAnswer: 3,
+                hint: "Este número era a base do calendário sagrado Tzolk'in e tinha grande significado ritualístico."
+            },
+            {
+                question: "Qual era a duração do ciclo sinódico de Marte segundo os maias?",
+                options: [
+                    "260 dias",
+                    "365 dias",
+                    "584 dias",
+                    "780 dias"
+                ],
+                correctAnswer: 3,
+                hint: "Os maias acompanhavam cuidadosamente o movimento deste planeta, que associavam à guerra."
+            },
+            {
+                question: "Qual desses animais NÃO fazia parte do zodíaco maia?",
+                options: [
+                    "Tartaruga",
+                    "Escorpião",
+                    "Pássaro",
+                    "Peixe"
+                ],
+                correctAnswer: 3,
+                hint: "O zodíaco maia incluía 13 constelações, muitas representadas por animais, mas não incluía este."
+            },
+            {
+                question: "Qual era o nome do livro que continha os conhecimentos astronômicos maias destruídos pelos espanhóis?",
+                options: [
+                    "Códice de Grolier",
+                    "Códice de Madrid",
+                    "Códice de Dresden",
+                    "Livros de Chilam Balam"
+                ],
+                correctAnswer: 3,
+                hint: "Estes livros foram escritos após a conquista, mas baseados em conhecimentos maias anteriores."
+            },
+            {
+                question: "Qual era o alinhamento astronômico mais importante em Uxmal?",
+                options: [
+                    "Solstício de verão no Palácio do Governador",
+                    "Equinócio na Pirâmide do Adivinho",
+                    "Ciclo de Vênus na Casa das Tartarugas",
+                    "Eclipse lunar no Quadrilátero das Freiras"
+                ],
+                correctAnswer: 0,
+                hint: "O Palácio do Governador está alinhado com o pôr do sol no solstício de verão, mostrando a precisão astronômica maia."
+            }
+        ];
+
+        // Variáveis do jogo
+        let currentPlayer = 1;
+        let player1Score = 0;
+        let player2Score = 0;
+        let player1QuestionIndex = 0;
+        let player2QuestionIndex = 0;
+        let shuffledQuestions = [];
+        let player1Questions = [];
+        let player2Questions = [];
+        let tiebreakerQuestion = null;
+        let currentQuestion = null;
+        let correctAnswer = null;
+        let hintsRemaining = 1;
+        let gameState = 'main'; // 'main' ou 'tiebreaker'
+        
+        // Elementos DOM
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const hintContainer = document.getElementById('hint-container');
+        const hintTextElement = document.getElementById('hint-text');
+        const hintButton = document.getElementById('hint-btn');
+        const nextButton = document.getElementById('next-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        const finalPlayer1ScoreElement = document.getElementById('final-player1-score');
+        const finalPlayer2ScoreElement = document.getElementById('final-player2-score');
+        const tiebreakerContainer = document.getElementById('tiebreaker-container');
+        const tiebreakerQuestionElement = document.getElementById('tiebreaker-question');
+        const tiebreakerOptionsElement = document.getElementById('tiebreaker-options');
+        const winnerMessageElement = document.getElementById('winner-message');
+        const restartButton = document.getElementById('restart-btn');
+        const player1Card = document.getElementById('player1-card');
+        const player2Card = document.getElementById('player2-card');
+        const player1QuestionElement = document.getElementById('player1-question');
+        const player2QuestionElement = document.getElementById('player2-question');
+        const player1ScoreElement = document.getElementById('player1-score');
+        const player2ScoreElement = document.getElementById('player2-score');
+        
+        // Inicializar o jogo
+        function initGame() {
+            currentPlayer = 1;
+            player1Score = 0;
+            player2Score = 0;
+            player1QuestionIndex = 0;
+            player2QuestionIndex = 0;
+            gameState = 'main';
+            
+            // Embaralhar perguntas e dividir entre os jogadores
+            shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+            player1Questions = shuffledQuestions.slice(0, 10);
+            player2Questions = shuffledQuestions.slice(10, 20);
+            tiebreakerQuestion = shuffledQuestions[20] || questions[Math.floor(Math.random() * questions.length)];
+            
+            updatePlayerCards();
+            showCurrentQuestion();
+            
+            quizContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+        }
+        
+        // Mostrar a pergunta atual
+        function showCurrentQuestion() {
+            resetState();
+            hintsRemaining = 1;
+            
+            if (gameState === 'main') {
+                if (currentPlayer === 1 && player1QuestionIndex < 10) {
+                    currentQuestion = player1Questions[player1QuestionIndex];
+                    player1QuestionIndex++;
+                } else if (currentPlayer === 2 && player2QuestionIndex < 10) {
+                    currentQuestion = player2Questions[player2QuestionIndex];
+                    player2QuestionIndex++;
+                } else {
+                    switchPlayer();
+                    return;
+                }
+            } else {
+                // Pergunta de desempate
+                currentQuestion = tiebreakerQuestion;
+            }
+            
+            correctAnswer = currentQuestion.correctAnswer;
+            questionElement.textContent = currentQuestion.question;
+            
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('div');
+                button.classList.add('option');
+                button.textContent = option;
+                button.addEventListener('click', () => selectAnswer(index));
+                optionsElement.appendChild(button);
+            });
+            
+            hintTextElement.textContent = currentQuestion.hint;
+            hintContainer.classList.remove('show');
+            nextButton.disabled = true;
+            hintButton.disabled = hintsRemaining <= 0;
+            
+            updatePlayerCards();
+        }
+        
+        // Resetar o estado das opções
+        function resetState() {
+            while (optionsElement.firstChild) {
+                optionsElement.removeChild(optionsElement.firstChild);
+            }
+            
+            Array.from(optionsElement.children).forEach(button => {
+                button.classList.remove('correct', 'incorrect');
+            });
+        }
+        
+        // Selecionar resposta
+        function selectAnswer(selectedIndex) {
+            const options = Array.from(optionsElement.children);
+            const correct = selectedIndex === correctAnswer;
+            
+            if (correct) {
+                if (currentPlayer === 1) {
+                    player1Score++;
+                } else {
+                    player2Score++;
+                }
+            }
+            
+            options.forEach((button, index) => {
+                button.classList.add(index === correctAnswer ? 'correct' : 'incorrect');
+                button.style.pointerEvents = 'none';
+            });
+            
+            nextButton.disabled = false;
+            updatePlayerCards();
+        }
+        
+        // Mostrar dica
+        function showHint() {
+            if (hintsRemaining > 0) {
+                hintContainer.classList.add('show');
+                hintsRemaining--;
+                hintButton.disabled = hintsRemaining <= 0;
+            }
+        }
+        
+        // Próxima pergunta
+        function nextQuestion() {
+            if (gameState === 'main') {
+                // Verificar se ambos os jogadores completaram suas perguntas
+                if (player1QuestionIndex >= 10 && player2QuestionIndex >= 10) {
+                    showResults();
+                    return;
+                }
+                
+                // Alternar jogador
+                switchPlayer();
+            } else {
+                // Pergunta de desempate foi respondida
+                showFinalResults();
+            }
+            
+            showCurrentQuestion();
+        }
+        
+        // Alternar jogador
+        function switchPlayer() {
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updatePlayerCards();
+        }
+        
+        // Atualizar cartões dos jogadores
+        function updatePlayerCards() {
+            player1Card.classList.toggle('active', currentPlayer === 1);
+            player2Card.classList.toggle('active', currentPlayer === 2);
+            
+            player1QuestionElement.textContent = `${player1QuestionIndex}/10`;
+            player2QuestionElement.textContent = `${player2QuestionIndex}/10`;
+            
+            player1ScoreElement.textContent = player1Score;
+            player2ScoreElement.textContent = player2Score;
+        }
+        
+        // Mostrar resultados
+        function showResults() {
+            quizContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            
+            finalPlayer1ScoreElement.textContent = player1Score;
+            finalPlayer2ScoreElement.textContent = player2Score;
+            
+            // Verificar empate
+            if (player1Score === player2Score) {
+                startTiebreaker();
+            } else {
+                showWinner();
+            }
+        }
+        
+        // Iniciar desempate
+        function startTiebreaker() {
+            gameState = 'tiebreaker';
+            tiebreakerContainer.style.display = 'block';
+            winnerMessageElement.textContent = "Empate! Hora da pergunta de desempate!";
+            
+            // Mostrar pergunta de desempate
+            resetTiebreakerState();
+            tiebreakerQuestionElement.textContent = tiebreakerQuestion.question;
+            
+            tiebreakerQuestion.options.forEach((option, index) => {
+                const button = document.createElement('div');
+                button.classList.add('option');
+                button.textContent = option;
+                button.addEventListener('click', () => selectTiebreakerAnswer(index));
+                tiebreakerOptionsElement.appendChild(button);
+            });
+        }
+        
+        // Resetar estado do desempate
+        function resetTiebreakerState() {
+            while (tiebreakerOptionsElement.firstChild) {
+                tiebreakerOptionsElement.removeChild(tiebreakerOptionsElement.firstChild);
+            }
+            
+            Array.from(tiebreakerOptionsElement.children).forEach(button => {
+                button.classList.remove('correct', 'incorrect');
+            });
+        }
+        
+        // Selecionar resposta no desempate
+        function selectTiebreakerAnswer(selectedIndex) {
+            const options = Array.from(tiebreakerOptionsElement.children);
+            const correct = selectedIndex === tiebreakerQuestion.correctAnswer;
+            
+            if (correct) {
+                // O jogador atual ganha o desempate
+                if (currentPlayer === 1) {
+                    player1Score++;
+                } else {
+                    player2Score++;
+                }
+            } else {
+                // O outro jogador ganha o desempate
+                if (currentPlayer === 1) {
+                    player2Score++;
+                } else {
+                    player1Score++;
+                }
+            }
+            
+            options.forEach((button, index) => {
+                button.classList.add(index === tiebreakerQuestion.correctAnswer ? 'correct' : 'incorrect');
+                button.style.pointerEvents = 'none';
+            });
+            
+            // Atualizar placar e mostrar vencedor
+            setTimeout(() => {
+                finalPlayer1ScoreElement.textContent = player1Score;
+                finalPlayer2ScoreElement.textContent = player2Score;
+                showFinalResults();
+            }, 1500);
+        }
+        
+        // Mostrar vencedor principal
+        function showWinner() {
+            if (player1Score > player2Score) {
+                winnerMessageElement.textContent = "Jogador 1 venceu!";
+            } else {
+                winnerMessageElement.textContent = "Jogador 2 venceu!";
+            }
+        }
+        
+        // Mostrar resultados finais (após desempate)
+        function showFinalResults() {
+            tiebreakerContainer.style.display = 'none';
+            showWinner();
+        }
+        
+        // Event listeners
+        hintButton.addEventListener('click', showHint);
+        nextButton.addEventListener('click', nextQuestion);
+        restartButton.addEventListener('click', initGame);
+        
+        // Iniciar o jogo
+        initGame();
+    </script>
+</body>
+</html>
