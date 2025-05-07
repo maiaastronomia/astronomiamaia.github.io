@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrologia Maia - Jogo Simplificado</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a1a;
+            color: #e0e0e0;
+        }
+        
+        #simulation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        #challenge-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(20, 20, 40, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            z-index: 2;
+            max-width: 90%;
+            text-align: center;
+        }
+        
+        #challenge-text {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        #hint-text {
+            font-size: 0.9em;
+            color: #00ffff;
+            margin: 8px 0;
+            font-style: italic;
+            display: none;
+        }
+        
+        #user-answer {
+            padding: 8px;
+            font-size: 1em;
+            width: 80px;
+            text-align: center;
+            background-color: #1a1a3a;
+            color: #e0e0e0;
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            background-color: #004444;
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        button:hover {
+            background-color: #00aaaa;
+            color: #000;
+        }
+        
+        #score-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(20, 20, 40, 0.9);
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            z-index: 2;
+            font-size: 0.9em;
+        }
+        
+        .info-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(20, 20, 40, 0.9);
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            z-index: 2;
+            max-width: 200px;
+            font-size: 0.9em;
+        }
+        
+        #hint-button {
+            background-color: #2a0044;
+        }
+        
+        .constellation-name {
+            position: absolute;
+            color: white;
+            font-size: 11px;
+            z-index: 2;
+            text-shadow: 0 0 3px black;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="simulation"></canvas>
+    
+    <div id="score-panel">
+        Desafio: <span id="challenge-count">1</span>/10 | 
+        Acertos: <span id="correct-count">0</span>
+    </div>
+    
+    <div class="info-panel">
+        <h3 style="margin:0;font-size:1.1em;">Astrologia Maia</h3>
+        <p style="margin:8px 0;">Alinhe os astros resolvendo cálculos simples!</p>
+    </div>
+    
+    <div id="challenge-panel">
+        <div id="challenge-text">Carregando desafio...</div>
+        <div id="hint-text"></div>
+        <input type="number" id="user-answer" placeholder="Resposta">
+        <button id="submit-answer">Enviar</button>
+        <button id="hint-button">Dica</button>
+        <button id="next-challenge" style="display:none;">Próximo</button>
+    </div>
+    
+    <script>
+        // Configurações da simulação
+        const canvas = document.getElementById('simulation');
+        const ctx = canvas.getContext('2d');
+        
+        // Ajustar canvas para ocupar toda a tela
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        // Corpos celestes simplificados
+        const celestialBodies = [
+            { name: "Sol", color: "#FFCC00", radius: 15, x: 0, y: 0, speed: 0, angle: 0, orbitRadius: 0 },
+            { name: "Vênus", color: "#FFA500", radius: 8, x: 0, y: 0, speed: 0.015, angle: 0, orbitRadius: 80 },
+            { name: "Marte", color: "#FF4500", radius: 9, x: 0, y: 0, speed: 0.012, angle: Math.PI, orbitRadius: 120 },
+            { name: "Lua", color: "#DDDDDD", radius: 5, x: 0, y: 0, speed: 0.04, angle: 0, orbitRadius: 30, orbitCenter: "Terra" },
+            { name: "Terra", color: "#1E90FF", radius: 10, x: 0, y: 0, speed: 0.01, angle: Math.PI*1.5, orbitRadius: 100 }
+        ];
+        
+        // Constelações simplificadas
+        const constellations = [
+            { name: "Cruz", stars: ["Vênus", "Marte", "Terra"], color: "#4B0082" },
+            { name: "Triângulo", stars: ["Sol", "Terra", "Lua"], color: "#006400" }
+        ];
+        
+        // Desafios matemáticos simplificados
+        const challenges = [
+            {
+                question: "Se Vênus dá 1 volta a cada 5 dias, quantas voltas em 10 dias?",
+                answer: 2,
+                hint: "Basta dividir 10 por 5",
+                effect: function() {
+                    // Efeito visual
+                    createParticles(canvas.width/2, canvas.height/2, 20, '#FFA500');
+                }
+            },
+            {
+                question: "Marte está a 120 do Sol. Terra a 100. Qual a diferença?",
+                answer: 20,
+                hint: "Subtraia: 120 - 100",
+                effect: function() {
+                    celestialBodies.find(b => b.name === "Marte").orbitRadius = 120;
+                    celestialBodies.find(b => b.name === "Terra").orbitRadius = 100;
+                }
+            },
+            {
+                question: "Quantas voltas da Lua (4/dia) em 3 dias?",
+                answer: 12,
+                hint: "Multiplique 4 voltas por 3 dias",
+                effect: function() {
+                    celestialBodies.find(b => b.name === "Lua").speed = 0.04;
+                }
+            },
+            {
+                question: "Se o Sol é 3x maior que a Lua (raio 5), qual seu raio?",
+                answer: 15,
+                hint: "Multiplique 5 por 3",
+                effect: function() {
+                    celestialBodies.find(b => b.name === "Sol").radius = 15;
+                }
+            },
+            {
+                question: "Terra (100) + Vênus (80) = ?",
+                answer: 180,
+                hint: "Some os dois números",
+                effect: function() {
+                    createParticles(canvas.width/2, canvas.height/2, 30, '#1E90FF');
+                }
+            },
+            {
+                question: "Se a Lua dá 12 voltas em 3 dias, quantas por dia?",
+                answer: 4,
+                hint: "Divida 12 por 3",
+                effect: function() {
+                    celestialBodies.find(b => b.name === "Lua").speed = 0.04;
+                }
+            },
+            {
+                question: "Vênus (80) - Lua (30) = ?",
+                answer: 50,
+                hint: "Subtraia 30 de 80",
+                effect: function() {
+                    celestialBodies.find(b => b.name === "Vênus").orbitRadius = 80;
+                    celestialBodies.find(b => b.name === "Lua").orbitRadius = 30;
+                }
+            },
+            {
+                question: "Quantos dias para 3 voltas de Vênus (5 dias/volta)?",
+                answer: 15,
+                hint: "Multiplique 3 por 5",
+                effect: function() {
+                    createParticles(canvas.width/2, canvas.height/2, 25, '#FFA500');
+                }
+            },
+            {
+                question: "Marte (9) + Lua (5) = ?",
+                answer: 14,
+                hint: "Some os dois tamanhos",
+                effect: function() {
+                    celestialBodies.find(b => b.name === "Marte").radius = 9;
+                    celestialBodies.find(b => b.name === "Lua").radius = 5;
+                }
+            },
+            {
+                question: "Terra (10) x Lua (5) = ?",
+                answer: 50,
+                hint: "Multiplique 10 por 5",
+                effect: function() {
+                    // Efeito final
+                    createParticles(canvas.width/2, canvas.height/2, 50, '#FFFFFF');
+                }
+            }
+        ];
+        
+        // Estado do jogo
+        let currentChallenge = 0;
+        let correctAnswers = 0;
+        let simulationRunning = true;
+        
+        // Elementos da UI
+        const challengeText = document.getElementById('challenge-text');
+        const hintText = document.getElementById('hint-text');
+        const userAnswer = document.getElementById('user-answer');
+        const submitAnswer = document.getElementById('submit-answer');
+        const hintButton = document.getElementById('hint-button');
+        const nextChallenge = document.getElementById('next-challenge');
+        const challengeCount = document.getElementById('challenge-count');
+        const correctCount = document.getElementById('correct-count');
+        
+        // Iniciar desafio
+        function startChallenge(index) {
+            if (index >= challenges.length) {
+                challengeText.innerHTML = "Parabéns!<br>Você completou todos os desafios!";
+                hintText.style.display = 'none';
+                userAnswer.style.display = 'none';
+                submitAnswer.style.display = 'none';
+                hintButton.style.display = 'none';
+                nextChallenge.style.display = 'none';
+                simulationRunning = false;
+                return;
+            }
+            
+            currentChallenge = index;
+            challengeText.textContent = challenges[index].question;
+            hintText.textContent = '';
+            hintText.style.display = 'none';
+            userAnswer.value = '';
+            userAnswer.style.display = 'inline-block';
+            userAnswer.focus();
+            submitAnswer.style.display = 'inline-block';
+            hintButton.style.display = 'inline-block';
+            nextChallenge.style.display = 'none';
+            
+            // Atualizar contadores
+            challengeCount.textContent = currentChallenge + 1;
+            correctCount.textContent = correctAnswers;
+        }
+        
+        // Verificar resposta
+        function checkAnswer() {
+            const answer = parseFloat(userAnswer.value);
+            const expected = challenges[currentChallenge].answer;
+            
+            if (isNaN(answer)) {
+                alert("Por favor, digite um número!");
+                return;
+            }
+            
+            if (answer === expected) {
+                challengeText.textContent = "Correto! Os astros se movem!";
+                correctAnswers++;
+                correctCount.textContent = correctAnswers;
+                
+                // Aplicar efeito
+                challenges[currentChallenge].effect();
+            } else {
+                challengeText.textContent = `Ops! A resposta era ${expected}.`;
+            }
+            
+            submitAnswer.style.display = 'none';
+            hintButton.style.display = 'none';
+            nextChallenge.style.display = 'inline-block';
+        }
+        
+        // Mostrar dica
+        function showHint() {
+            hintText.textContent = challenges[currentChallenge].hint;
+            hintText.style.display = 'block';
+            hintButton.style.display = 'none';
+        }
+        
+        // Partículas para efeitos
+        let particles = [];
+        
+        function createParticles(x, y, count, color) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    radius: Math.random() * 2 + 1,
+                    color: color,
+                    speedX: Math.random() * 4 - 2,
+                    speedY: Math.random() * 4 - 2,
+                    life: 50 + Math.random() * 50
+                });
+            }
+        }
+        
+        // Event listeners
+        submitAnswer.addEventListener('click', checkAnswer);
+        userAnswer.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+        hintButton.addEventListener('click', showHint);
+        nextChallenge.addEventListener('click', function() {
+            startChallenge(currentChallenge + 1);
+        });
+        
+        // Iniciar primeiro desafio
+        startChallenge(0);
+        
+        // Atualizar posições
+        function updatePositions() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            celestialBodies.forEach(body => {
+                if (body.name === "Sol") {
+                    body.x = centerX;
+                    body.y = centerY;
+                    return;
+                }
+                
+                body.angle += body.speed;
+                if (body.angle > Math.PI * 2) body.angle -= Math.PI * 2;
+                
+                let orbitCenterX = centerX;
+                let orbitCenterY = centerY;
+                
+                if (body.orbitCenter) {
+                    const centerBody = celestialBodies.find(b => b.name === body.orbitCenter);
+                    if (centerBody) {
+                        orbitCenterX = centerBody.x;
+                        orbitCenterY = centerBody.y;
+                    }
+                }
+                
+                body.x = orbitCenterX + Math.cos(body.angle) * body.orbitRadius;
+                body.y = orbitCenterY + Math.sin(body.angle) * body.orbitRadius;
+            });
+        }
+        
+        // Desenhar simulação
+        function drawSimulation() {
+            // Limpar canvas
+            ctx.fillStyle = '#0a0a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Desenhar estrelas de fundo
+            if (!window.starfield) {
+                window.starfield = [];
+                for (let i = 0; i < 100; i++) {
+                    window.starfield.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.2,
+                        alpha: 0.3 + Math.random() * 0.7
+                    });
+                }
+            }
+            
+            window.starfield.forEach(star => {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Desenhar órbitas
+            celestialBodies.forEach(body => {
+                if (body.name === "Sol") return;
+                
+                ctx.beginPath();
+                ctx.strokeStyle = `${body.color}20`;
+                ctx.lineWidth = 1;
+                
+                let orbitCenterX = centerX;
+                let orbitCenterY = centerY;
+                
+                if (body.orbitCenter) {
+                    const centerBody = celestialBodies.find(b => b.name === body.orbitCenter);
+                    if (centerBody) {
+                        orbitCenterX = centerBody.x;
+                        orbitCenterY = centerBody.y;
+                    }
+                }
+                
+                ctx.arc(orbitCenterX, orbitCenterY, body.orbitRadius, 0, Math.PI * 2);
+                ctx.stroke();
+            });
+            
+            // Desenhar constelações
+            constellations.forEach(constellation => {
+                const points = [];
+                
+                constellation.stars.forEach(starName => {
+                    const star = celestialBodies.find(b => b.name === starName);
+                    if (star) points.push({ x: star.x, y: star.y });
+                });
+                
+                if (points.length < 2) return;
+                
+                ctx.beginPath();
+                ctx.strokeStyle = `${constellation.color}60`;
+                ctx.lineWidth = 1.5;
+                ctx.moveTo(points[0].x, points[0].y);
+                
+                for (let i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+                
+                if (points.length > 2) {
+                    ctx.lineTo(points[0].x, points[0].y);
+                }
+                
+                ctx.stroke();
+                
+                // Nome da constelação
+                if (canvas.width > 500) {
+                    const centroid = points.reduce((acc, point) => {
+                        return { x: acc.x + point.x/points.length, y: acc.y + point.y/points.length };
+                    }, { x: 0, y: 0 });
+                    
+                    let nameEl = document.querySelector(`.constellation-name[data-name="${constellation.name}"]`);
+                    
+                    if (!nameEl) {
+                        nameEl = document.createElement('div');
+                        nameEl.className = 'constellation-name';
+                        nameEl.textContent = constellation.name;
+                        nameEl.setAttribute('data-name', constellation.name);
+                        document.body.appendChild(nameEl);
+                    }
+                    
+                    nameEl.style.left = `${centroid.x - nameEl.offsetWidth/2}px`;
+                    nameEl.style.top = `${centroid.y - 15}px`;
+                }
+            });
+            
+            // Desenhar corpos celestes
+            celestialBodies.forEach(body => {
+                // Brilho
+                const gradient = ctx.createRadialGradient(
+                    body.x, body.y, 0,
+                    body.x, body.y, body.radius * 1.5
+                );
+                gradient.addColorStop(0, body.color);
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx.beginPath();
+                ctx.fillStyle = gradient;
+                ctx.arc(body.x, body.y, body.radius * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Corpo
+                ctx.beginPath();
+                ctx.fillStyle = body.color;
+                ctx.arc(body.x, body.y, body.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Nome
+                if (body.radius > 7 && canvas.width > 500) {
+                    ctx.font = '10px Arial';
+                    ctx.fillStyle = '#FFF';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(body.name, body.x, body.y + body.radius + 12);
+                }
+            });
+            
+            // Partículas
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                ctx.beginPath();
+                ctx.fillStyle = `${p.color}${Math.floor(p.life/100*255).toString(16).padStart(2,'0')}`;
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life--;
+                
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+        
+        // Animação
+        function animate() {
+            if (simulationRunning) updatePositions();
+            drawSimulation();
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
